@@ -27,5 +27,10 @@ class VocabularyViewModel(private val repository: VocabularyRepository): ViewMod
 }
 
 class VocabularyViewModelFactory(private val repository: VocabularyRepository): ViewModelProvider.Factory {
-
+    override fun <T: ViewModel> create(modelClass: Class<T>): T {
+        if(modelClass.isAssignableFrom(VocabularyViewModel::class.java)){
+            return VocabularyViewModel(repository) as T
+        }
+        throw IllegalArgumentException("Unknown Class for View Model")
+    }
 }
