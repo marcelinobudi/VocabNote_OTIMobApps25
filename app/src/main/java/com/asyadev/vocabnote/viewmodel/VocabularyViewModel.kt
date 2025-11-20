@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 class VocabularyViewModel(private val repository: VocabularyRepository): ViewModel() {
     private var _allVocabulary: MutableLiveData<List<Vocabulary>> = MutableLiveData<List<Vocabulary>>()
     val vocabularyList: LiveData<List<Vocabulary>> = _allVocabulary
+
     fun getVocabularyList() {
         viewModelScope.launch {
             try {

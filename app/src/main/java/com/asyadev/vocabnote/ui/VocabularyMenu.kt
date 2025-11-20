@@ -22,6 +22,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,64 +47,66 @@ import com.asyadev.vocabnote.viewmodel.VocabularyViewModel
 fun VocabularyMenu(viewModel: VocabularyViewModel, modifier: Modifier = Modifier) {
     val vocabularies = viewModel.vocabularyList.observeAsState()
     val vocabulary = vocabularies.value ?: listOf()
+    Log.d("List vocabulary", vocabulary.toString())
     val vocabularyCard = remember { mutableStateOf<Vocabulary?>(null) }
     try {
-        viewModel.getVocabularyList()
+        if(vocabulary.isEmpty()) viewModel.getVocabularyList()
         Log.d("Vocabulary Menu", "Sukses")
     } catch (e: Exception){
         Log.d("Vocabulary Menu", e.message.toString())
     }
-    if(vocabularyCard.value != null){
-        Column(
-            Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Card {
-                Column(
-                    Modifier.padding(12.dp)
-                ) {
-                    Text(
-                        text = vocabularyCard.value?.word + " - " + vocabularyCard.value?.pronounciation,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = vocabularyCard.value?.translation + ""
-                    )
-                }
-                Column(Modifier.padding(12.dp)) {
-                    
-                }
-                Row {
-
-                }
-            }
+    LazyColumn(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.fillMaxWidth()
+    ) {
+        items(1) {
+            Spacer(Modifier.height(12.dp))
+            Text(
+                text = "Daftar Kosakata",
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(Modifier.height(27.dp))
         }
-    } else {
-        LazyColumn(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier.fillMaxWidth()
-        ) {
-            items(1) {
-                Spacer(Modifier.height(12.dp))
-                Text(
-                    text = "Daftar Kosakata",
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(Modifier.height(27.dp))
-            }
-            items(vocabulary.size) {
-                VocabularyCard(
-                    vocabulary = vocabulary[it],
-                    onClick = {
-                        vocabularyCard.value = vocabulary[it]
-                    },
-                    series = vocabulary.size - it
-                )
-            }
+        items(vocabulary.size) {
+            VocabularyCard(
+                vocabulary = vocabulary[it],
+                onClick = {
+                    vocabularyCard.value = vocabulary[it]
+                },
+                series = vocabulary.size - it
+            )
         }
     }
+//    if(vocabularyCard.value != null){
+//        Column(
+//            Modifier.fillMaxSize(),
+//            verticalArrangement = Arrangement.Center,
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//            Card {
+//                Column(
+//                    Modifier.padding(12.dp)
+//                ) {
+//                    Text(
+//                        text = vocabularyCard.value?.word + " - " + vocabularyCard.value?.pronounciation,
+//                        fontWeight = FontWeight.Bold
+//                    )
+//                    Text(
+//                        text = vocabularyCard.value?.translation + ""
+//                    )
+//                }
+//                Column(Modifier.padding(12.dp)) {
+//
+//                }
+//                Row {
+//
+//                }
+//            }
+//        }
+//    } else {
+//
+//    }
 }
 
 @Composable
@@ -123,12 +126,6 @@ fun VocabularyCard(
             disabledContentColor = MaterialTheme.colorScheme.onSecondaryContainer,
             disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
         ),
-//        colors = CardColors(
-//            containerColor = MaterialTheme.colorScheme.primaryContainer,
-//            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-//            disabledContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-//            disabledContainerColor = MaterialTheme.colorScheme.primaryContainer,
-//        ),
         modifier = Modifier
             .size(width = 364.dp, height = 80.dp)
     ) {
@@ -158,25 +155,27 @@ fun VocabularyCard(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = vocabulary.word,
+                    text = vocabulary.word + "",
                     fontWeight = FontWeight.Bold
                 )
                 Text(text = vocabulary.translation)
             }
             Column(
                 Modifier
-                    .size(80.dp)
-                    .clickable {
-                        onClick()
-                    },
+                    .size(80.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Image(
-                    painter = painterResource(R.drawable.edit_32dp),
-                    contentDescription = "Edit Kosakata",
-                    modifier = Modifier.width(32.dp)
-                )
+                IconButton(
+                    onClick = onClick
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.edit_32dp),
+                        contentDescription = "Edit Kosakata",
+                        modifier = Modifier.width(32.dp)
+                    )
+                }
+
             }
         }
     }
