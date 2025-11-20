@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -36,14 +37,17 @@ import com.asyadev.vocabnote.database.AppDatabase
 import com.asyadev.vocabnote.navigation.AppNavHost
 import com.asyadev.vocabnote.navigation.Destination
 import com.asyadev.vocabnote.ui.theme.VocabNoteTheme
+import com.asyadev.vocabnote.viewmodel.VocabularyViewModel
+import com.asyadev.vocabnote.viewmodel.VocabularyViewModelFactory
 
 class MainActivity : ComponentActivity() {
+    private val vocabularyViewModel: VocabularyViewModel by viewModels {
+        VocabularyViewModelFactory((application as VocabularyApplication).repository)
+    }
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        val db = AppDatabase.getInstance(this)
 
         setContent {
             VocabNoteTheme {
@@ -107,7 +111,7 @@ class MainActivity : ComponentActivity() {
                     }
                 ) { contentPadding ->
 
-                    AppNavHost(navController, startDestination, modifier = Modifier.padding(contentPadding))
+                    AppNavHost(navController, startDestination, vocabularyViewModel, modifier = Modifier.padding(contentPadding))
                 }
             }
         }

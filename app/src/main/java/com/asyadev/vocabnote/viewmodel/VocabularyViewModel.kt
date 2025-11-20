@@ -1,6 +1,7 @@
 package com.asyadev.vocabnote.viewmodel
 
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,12 +14,33 @@ import kotlinx.coroutines.launch
 
 class VocabularyViewModel(private val repository: VocabularyRepository): ViewModel() {
     var vocabularyList: LiveData<List<Vocabulary>> = repository.allVocabulary.asLiveData()
-    fun addVocabulary(newVocabulary: Vocabulary) = viewModelScope.launch {
-        repository.insert(newVocabulary)
+    fun addVocabulary(word: String, translation: String, description: String,example: String,pronounciation: String, difficulty: String){
+        if(
+            word.isEmpty() ||
+            translation.isEmpty() ||
+            difficulty.isEmpty()
+        ){
+            // BISA BERI PESAN ERROR
+            return
+        }
+        val newVocabulary = Vocabulary(
+            word = word,
+            translation = translation,
+            description = description,
+            example = example,
+            pronounciation = pronounciation,
+            difficulty = difficulty
+        )
+        viewModelScope.launch {
+            repository.insert(newVocabulary)
+        }
     }
 
-    fun updateVocabulary(vocabulary: Vocabulary) = viewModelScope.launch {
-        repository.update(vocabulary)
+    fun updateVocabulary(vocabulary: Vocabulary) {
+
+        viewModelScope.launch {
+            repository.update(vocabulary)
+        }
     }
 
     fun deleteVocabulary(vocabulary: Vocabulary) = viewModelScope.launch {

@@ -1,5 +1,6 @@
 package com.asyadev.vocabnote.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,10 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import com.asyadev.vocabnote.MainActivity
+import com.asyadev.vocabnote.database.Vocabulary
 import com.asyadev.vocabnote.ui.theme.VocabNoteTheme
+import com.asyadev.vocabnote.viewmodel.VocabularyViewModel
 
 @Composable
-fun AddVocabularyMenu(modifier: Modifier = Modifier) {
+fun AddVocabularyMenu(viewModel: VocabularyViewModel, modifier: Modifier = Modifier) {
     val wordValue = remember{ mutableStateOf("")}
     val translationValue = remember{ mutableStateOf("")}
     val descriptionValue = remember{ mutableStateOf("")}
@@ -106,6 +111,15 @@ fun AddVocabularyMenu(modifier: Modifier = Modifier) {
         Button(
             onClick = {
                 // TAMBAHKAN
+                viewModel.addVocabulary(
+                    word = wordValue.value,
+                    translation = translationValue.value,
+                    description = descriptionValue.value,
+                    example = usingExampleValue.value,
+                    pronounciation = pronounciationValue.value,
+                    difficulty = difficultyValue.value
+
+                )
             }
         ) {
             Text("Tambah")
