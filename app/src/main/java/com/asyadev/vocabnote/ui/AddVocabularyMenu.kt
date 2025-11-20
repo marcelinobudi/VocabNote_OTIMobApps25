@@ -120,6 +120,12 @@ fun AddVocabularyMenu(viewModel: VocabularyViewModel, modifier: Modifier = Modif
                     difficulty = difficultyValue.value
 
                 )
+                wordValue.value = ""
+                translationValue.value = ""
+                descriptionValue.value = ""
+                usingExampleValue.value = ""
+                pronounciationValue.value = ""
+                difficultyValue.value = ""
             }
         ) {
             Text("Tambah")
@@ -127,10 +133,10 @@ fun AddVocabularyMenu(viewModel: VocabularyViewModel, modifier: Modifier = Modif
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun AddVocabularyMenuPreview() {
-    VocabNoteTheme {
-        VocabularyMenu()
-    }
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun AddVocabularyMenuPreview() {
+//    VocabNoteTheme {
+//        VocabularyMenu()
+//    }
+//}

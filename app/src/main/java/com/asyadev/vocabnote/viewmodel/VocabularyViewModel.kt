@@ -1,5 +1,6 @@
 package com.asyadev.vocabnote.viewmodel
 
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.LiveData
@@ -13,7 +14,18 @@ import com.asyadev.vocabnote.database.VocabularyRepository
 import kotlinx.coroutines.launch
 
 class VocabularyViewModel(private val repository: VocabularyRepository): ViewModel() {
-    var vocabularyList: LiveData<List<Vocabulary>> = repository.allVocabulary.asLiveData()
+    private var _allVocabulary: MutableLiveData<List<Vocabulary>> = MutableLiveData<List<Vocabulary>>()
+    val vocabularyList: LiveData<List<Vocabulary>> = _allVocabulary
+    fun getVocabularyList() {
+        viewModelScope.launch {
+            try {
+                _allVocabulary.value = repository.getVocabulary()
+            } catch (e: Exception){
+                Log.d("Get Vocabulary", e.message.toString())
+            }
+
+        }
+    }
     fun addVocabulary(word: String, translation: String, description: String,example: String,pronounciation: String, difficulty: String){
         if(
             word.isEmpty() ||
@@ -32,7 +44,14 @@ class VocabularyViewModel(private val repository: VocabularyRepository): ViewMod
             difficulty = difficulty
         )
         viewModelScope.launch {
-            repository.insert(newVocabulary)
+            try{
+                repository.insert(newVocabulary)
+                Log.d("Menambah vocabulary", "sukses")
+            } catch(E: Exception) {
+                Log.d("Menambah vocabulary", "gagal")
+            }
+
+
         }
     }
 

@@ -27,7 +27,7 @@ fun AppNavHost(
         Destination.entries.forEach { destination ->
             composable(destination.route) {
                 when (destination) {
-                    Destination.VOCABULARY_LIST -> VocabularyMenu(modifier)
+                    Destination.VOCABULARY_LIST -> VocabularyMenu(vocabularyViewModel, modifier)
                     Destination.ADD_VOCABULARY -> AddVocabularyMenu(vocabularyViewModel, modifier)
                     Destination.QUIZ -> QuizMenu(modifier)
                     Destination.EDIT_VOCABULARY -> EditVocabularyMenu(modifier)

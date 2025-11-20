@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface VocabularyDao {
-    @Query("SELECT * FROM vocabulary ORDER BY uid ASC")
-    fun getAll(): Flow<List<Vocabulary>>
+    @Query("SELECT * FROM vocabulary ORDER BY uid DESC")
+    suspend fun getAll(): List<Vocabulary>
 
 //    @Query("SELECT * FROM vocabulary WHERE uid IN (:wordIds)")
 //    fun loadAllByIds(wordIds: IntArray): Flow<List<Vocabulary>>
