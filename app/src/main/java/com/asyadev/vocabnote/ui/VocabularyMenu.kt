@@ -18,12 +18,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -45,68 +47,93 @@ import com.asyadev.vocabnote.viewmodel.VocabularyViewModel
 
 @Composable
 fun VocabularyMenu(viewModel: VocabularyViewModel, modifier: Modifier = Modifier) {
-    val vocabularies = viewModel.vocabularyList.observeAsState()
-    val vocabulary = vocabularies.value ?: listOf()
+    val vocabulariesObserver = viewModel.vocabularyList.observeAsState()
+    val vocabulary = vocabulariesObserver.value ?: listOf()
     Log.d("List vocabulary", vocabulary.toString())
     val vocabularyCard = remember { mutableStateOf<Vocabulary?>(null) }
     try {
-        if(vocabulary.isEmpty()) viewModel.getVocabularyList()
+        viewModel.getVocabularyList()
         Log.d("Vocabulary Menu", "Sukses")
     } catch (e: Exception){
         Log.d("Vocabulary Menu", e.message.toString())
     }
-    LazyColumn(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.fillMaxWidth()
-    ) {
-        items(1) {
-            Spacer(Modifier.height(12.dp))
-            Text(
-                text = "Daftar Kosakata",
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(Modifier.height(27.dp))
+
+    if(vocabularyCard.value != null){
+        Column(
+            Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Card(
+                Modifier.width(360.dp)
+            ) {
+                Column(
+                    Modifier.padding(12.dp)
+                ) {
+                    Text(
+                        text = vocabularyCard.value?.word + " - " + vocabularyCard.value?.pronounciation,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = vocabularyCard.value?.translation + ""
+                    )
+                }
+                Column(Modifier.padding(8.dp)) {
+                    var description =  if((vocabularyCard.value?.description == "")) {
+                        "Kosakata ini tidak memiliki penjelasan..."
+                    } else{
+                        vocabularyCard.value?.description
+                    }
+                    Text(
+                        text = description +""
+                    )
+                }
+                Row(
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier.padding(12.dp).fillMaxWidth()
+                ) {
+                    OutlinedButton(
+                        onClick = {
+                            // Belum dibuat
+                        }
+                    ) {
+                        Text(text = "Edit")
+                    }
+                    Button(
+                        onClick = {
+                            vocabularyCard.value = null
+                        }
+                    ) {
+                        Text(text = "Oke")
+                    }
+                }
+            }
         }
-        items(vocabulary.size) {
-            VocabularyCard(
-                vocabulary = vocabulary[it],
-                onClick = {
-                    vocabularyCard.value = vocabulary[it]
-                },
-                series = vocabulary.size - it
-            )
+    } else {
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier.fillMaxWidth()
+        ) {
+            items(1) {
+                Spacer(Modifier.height(12.dp))
+                Text(
+                    text = "Daftar Kosakata",
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(Modifier.height(27.dp))
+            }
+            items(vocabulary.size) {
+                VocabularyCard(
+                    vocabulary = vocabulary[it],
+                    onClick = {
+                        vocabularyCard.value = vocabulary[it]
+                    },
+                    series = vocabulary.size - it
+                )
+            }
         }
     }
-//    if(vocabularyCard.value != null){
-//        Column(
-//            Modifier.fillMaxSize(),
-//            verticalArrangement = Arrangement.Center,
-//            horizontalAlignment = Alignment.CenterHorizontally
-//        ) {
-//            Card {
-//                Column(
-//                    Modifier.padding(12.dp)
-//                ) {
-//                    Text(
-//                        text = vocabularyCard.value?.word + " - " + vocabularyCard.value?.pronounciation,
-//                        fontWeight = FontWeight.Bold
-//                    )
-//                    Text(
-//                        text = vocabularyCard.value?.translation + ""
-//                    )
-//                }
-//                Column(Modifier.padding(12.dp)) {
-//
-//                }
-//                Row {
-//
-//                }
-//            }
-//        }
-//    } else {
-//
-//    }
 }
 
 @Composable

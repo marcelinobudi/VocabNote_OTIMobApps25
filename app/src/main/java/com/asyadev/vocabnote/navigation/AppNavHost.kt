@@ -29,7 +29,7 @@ fun AppNavHost(
                 when (destination) {
                     Destination.VOCABULARY_LIST -> VocabularyMenu(vocabularyViewModel, modifier)
                     Destination.ADD_VOCABULARY -> AddVocabularyMenu(vocabularyViewModel, modifier)
-                    Destination.QUIZ -> QuizMenu(modifier)
+                    Destination.QUIZ -> QuizMenu(vocabularyViewModel, modifier)
                     Destination.EDIT_VOCABULARY -> EditVocabularyMenu(modifier)
                 }
             }
