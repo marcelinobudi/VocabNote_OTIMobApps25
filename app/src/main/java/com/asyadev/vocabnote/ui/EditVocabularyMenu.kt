@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -39,92 +40,100 @@ fun EditVocabularyMenu(
     val pronounciationValue = remember{ mutableStateOf(vocabulary.pronounciation) }
     val difficultyValue = remember{ mutableStateOf(vocabulary.difficulty) }
 
-    Column(
+    LazyColumn(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            text = "Edit Kosakata"
-        )
-        // WORD
-        Spacer(modifier = Modifier.height(30.dp))
-        OutlinedTextField(
-            value = wordValue.value,
-            onValueChange = {
-                wordValue.value = it
-            },
-            label = {
-                Text("Kata")
+        item {
+            Text(
+                text = "Edit Kosakata"
+            )
+            // WORD
+            Spacer(modifier = Modifier.height(30.dp))
+            OutlinedTextField(
+                value = wordValue.value,
+                onValueChange = {
+                    wordValue.value = it
+                },
+                label = {
+                    Text("Kata")
+                }
+            )
+            // Translation
+            Spacer(modifier = Modifier.height(16.dp))
+            OutlinedTextField(
+                value = translationValue.value,
+                onValueChange = {
+                    translationValue.value = it
+                },
+                label = {
+                    Text("Arti")
+                }
+            )
+            // Deskripsi
+            Spacer(modifier = Modifier.height(16.dp))
+            OutlinedTextField(
+                value = descriptionValue.value,
+                onValueChange = {
+                    descriptionValue.value = it
+                },
+                label = {
+                    Text("Deskripsi")
+                }
+            )
+            // Example
+            Spacer(modifier = Modifier.height(16.dp))
+            OutlinedTextField(
+                value = usingExampleValue.value,
+                onValueChange = {
+                    usingExampleValue.value = it
+                },
+                label = {
+                    Text("Contoh Penggunaan")
+                }
+            )
+            // Pronounciation
+            Spacer(modifier = Modifier.height(16.dp))
+            OutlinedTextField(
+                value = pronounciationValue.value,
+                onValueChange = {
+                    pronounciationValue.value = it
+                },
+                label = {
+                    Text("Pengucapan")
+                }
+            )
+            // Difficulty
+            Spacer(modifier = Modifier.height(16.dp))
+            OutlinedTextField(
+                value = difficultyValue.value,
+                onValueChange = {
+                    difficultyValue.value = it
+                },
+                label = {
+                    Text("Tingkat Kesulitan")
+                }
+            )
+            // Add Vocabulary
+            Spacer(modifier = Modifier.height(24.dp))
+            Button(
+                onClick = {
+                    val editedVocabulary = Vocabulary(
+                        word = wordValue.value,
+                        translation = translationValue.value,
+                        description = descriptionValue.value,
+                        example = usingExampleValue.value,
+                        pronounciation = pronounciationValue.value,
+                        difficulty = difficultyValue.value,
+                        uid = vocabulary.uid
+                    )
+                    viewModel.updateVocabulary(editedVocabulary)
+                    navController.navigate(route = Destination.VOCABULARY_LIST.route)
+                }
+            ) {
+                Text("Edit")
             }
-        )
-        // Translation
-        Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(
-            value = translationValue.value,
-            onValueChange = {
-                translationValue.value = it
-            },
-            label = {
-                Text("Arti")
-            }
-        )
-        // Deskripsi
-        Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(
-            value = descriptionValue.value,
-            onValueChange = {
-                descriptionValue.value = it
-            },
-            label = {
-                Text("Deskripsi")
-            }
-        )
-        // Example
-        Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(
-            value = usingExampleValue.value,
-            onValueChange = {
-                usingExampleValue.value = it
-            },
-            label = {
-                Text("Contoh Penggunaan")
-            }
-        )
-        // Pronounciation
-        Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(
-            value = pronounciationValue.value,
-            onValueChange = {
-                pronounciationValue.value = it
-            },
-            label = {
-                Text("Pengucapan")
-            }
-        )
-        // Difficulty
-        Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(
-            value = difficultyValue.value,
-            onValueChange = {
-                difficultyValue.value = it
-            },
-            label = {
-                Text("Tingkat Kesulitan")
-            }
-        )
-        // Add Vocabulary
-        Spacer(modifier = Modifier.height(24.dp))
-        Button(
-            onClick = {
-                val editedVocabulary = Vocabulary(
-                    word = wordValue.value, translation = translationValue.value, description = descriptionValue.value, example = usingExampleValue.value, pronounciation = pronounciationValue.value, difficulty = difficultyValue.value, uid = vocabulary.uid
-                )
-                viewModel.updateVocabulary(editedVocabulary)
-                navController.navigate(route = Destination.VOCABULARY_LIST.route)
-            }
-        ) {
-            Text("Edit")
         }
     }
 }
