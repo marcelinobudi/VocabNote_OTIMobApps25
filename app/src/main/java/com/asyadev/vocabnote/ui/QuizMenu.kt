@@ -12,10 +12,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,8 +36,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.dropShadow
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.asyadev.vocabnote.database.Vocabulary
 import com.asyadev.vocabnote.quiz.QuizManager
@@ -69,12 +79,12 @@ fun QuizMenu(viewModel: VocabularyViewModel, modifier: Modifier = Modifier) {
         ) {
             CircularProgressIndicator()
         }
-        viewModel.getVocabularyList()
-//        LaunchedEffect(vocabularies.isEmpty()) {
-//            if (vocabularies.isEmpty()) {
-//
-//            }
-//        }
+        try{
+            viewModel.getVocabularyList()
+        } catch (e:Exception){
+            Log.d("Load vocabulary Quiz", e.message.toString())
+        }
+
     }
     else if(vocabularies.size < QuizManager.numberNeededForQuisRequirement) {
         Column(
@@ -87,11 +97,21 @@ fun QuizMenu(viewModel: VocabularyViewModel, modifier: Modifier = Modifier) {
 
     }
     else if(quizQuestion.isNotEmpty()){
-        QuizSection(
-            quizQuestion = quizQuestion,
-            vocabularies = vocabularies,
-            viewModel
-        )
+
+        LazyColumn(
+            modifier = modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            items(1){
+                QuizSection(
+                    quizQuestion = quizQuestion,
+                    vocabularies = vocabularies,
+                    viewModel
+                )
+            }
+        }
+
 
     }
 }
@@ -127,8 +147,13 @@ fun QuizSection(
                     OptionBox(
                         text = answer,
                         onClick = {
-                            userAnswer.value = (answer == quizQuestion[numberIndex].answer)
-                            showAnswer.value = true
+                            try {
+                                userAnswer.value = (answer == quizQuestion[numberIndex].answer)
+                                showAnswer.value = true
+                            } catch (e: Exception){
+                                Log.d("Quiz Option Box", e.message.toString())
+                            }
+
                         }
                     )
                     Spacer(Modifier.height(16.dp))
@@ -136,14 +161,21 @@ fun QuizSection(
                 }
             } else {
                 val text: String = """
-                        ${if (userAnswer.value) "Benar" else "Salah"} \n
+                        ${if (userAnswer.value) "Benar" else "Salah"}
                         Terjemahan dari ${quizQuestion[numberIndex].question} adalah ${quizQuestion[numberIndex].answer}
                     """.trimIndent()
                 ExplanationBox(text = text, userAnswer.value)
                 Button({
-                    showAnswer.value = false
-                    number.intValue += 1
-                    answerOption.value = QuizManager.loadAnswerOption(quizQuestion[number.intValue-1].answer, vocabularies)
+                    try {
+                        showAnswer.value = false
+                        number.intValue += 1
+                        answerOption.value = QuizManager.loadAnswerOption(
+                            quizQuestion[number.intValue - 1].answer,
+                            vocabularies
+                        )
+                    } catch (e: Exception){
+                        Log.d("Continue Quiz", e.message.toString())
+                    }
                 }) {
                     Text("Lanjut")
                 }
@@ -160,8 +192,10 @@ fun QuestionBox(question: String, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .width(334.dp)
-            .height(334.dp)
+            .height(109.dp)
+            .clip(RoundedCornerShape(10.dp))
             .background(MaterialTheme.colorScheme.primaryContainer)
+
     ){
         Column(
             modifier= Modifier
@@ -182,7 +216,9 @@ fun ExplanationBox(text: String, isAnswerRight: Boolean, modifier: Modifier = Mo
     Box(
         modifier = modifier
             .width(334.dp)
+            .clip(RoundedCornerShape(10.dp))
             .background(color)
+
     ){
         Column(
             modifier= Modifier
@@ -199,23 +235,21 @@ fun ExplanationBox(text: String, isAnswerRight: Boolean, modifier: Modifier = Mo
 
 @Composable
 fun OptionBox(text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    Button(onClick = onClick
+    FilledTonalButton(onClick = onClick,
+        modifier
+            .width(334.dp)
+            .height(42.dp),
+        shape = RoundedCornerShape(10.dp)
     ){
-        Box(
-            modifier = modifier
-                .width(334.dp)
-                .height(42.dp)
-        ){
-            Column(
-                modifier= Modifier
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = text,
-                    Modifier.padding(start = 20.dp)
-                )
-            }
+        Column(
+            modifier= Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = text,
+                Modifier.padding(start = 20.dp)
+            )
         }
     }
 
