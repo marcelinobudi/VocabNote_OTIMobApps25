@@ -26,21 +26,21 @@ Vocab Note saat ini menyediakan fungsionalitas sebagai berikut:
 
 Aplikasi Vocab Note dikembangkan secara native untuk Android menggunakan:
 
-    Bahasa Pemrograman: Kotlin
+- Bahasa Pemrograman: Kotlin
 
-    UI Toolkit: Jetpack Compose (Pengembangan UI modern dan deklaratif).
+- UI Toolkit: Jetpack Compose (Pengembangan UI modern dan deklaratif).
 
     Penyimpanan Data Lokal: Room Persistent Library.
 
-        Digunakan sebagai local database untuk menyimpan data kosakata, mendukung operasi CRUD (Create, Read, Update, Delete) yang efisien.
+    Digunakan sebagai local database untuk menyimpan data kosakata, mendukung operasi CRUD (Create, Read, Update, Delete) yang efisien.
 
-    Navigasi: Jetpack Compose Navigation.
+- Navigasi: Jetpack Compose Navigation.
 
-        Mengimplementasikan NavController dan NavHost sesuai best practice dari dokumentasi resmi untuk pengelolaan state dan transisi antar layar.
+    Mengimplementasikan NavController dan NavHost sesuai best practice dari dokumentasi resmi untuk pengelolaan state dan transisi antar layar.
 
-    State Management: ViewModel, Observable State, Remember, Recomposition.
+- State Management: ViewModel, Observable State, Remember, Recomposition.
 
-        Digunakan untuk memisahkan logika bisnis dari UI dan mengakses database. ( Catatan: Implementasi ViewModel ini adalah hasil referensi, dan saya masih terus mendalami prinsip arsitektur MVVM/MVI yang optimal dalam Jetpack Compose.)
+    Digunakan untuk memisahkan logika bisnis dari UI dan mengakses database. ( Catatan: Implementasi ViewModel ini adalah hasil referensi, dan saya masih terus mendalami prinsip arsitektur MVVM/MVI yang optimal dalam Jetpack Compose.)
 
 # 🚧 Kekurangan Aplikasi dan Rencana Pengembangan
 
