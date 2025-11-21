@@ -9,13 +9,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.asyadev.vocabnote.database.Vocabulary
 import com.asyadev.vocabnote.database.VocabularyRepository
 import kotlinx.coroutines.launch
 
 class VocabularyViewModel(private val repository: VocabularyRepository): ViewModel() {
     private var _allVocabulary: MutableLiveData<List<Vocabulary>> = MutableLiveData<List<Vocabulary>>()
+    private var _preUpdatedVocabulary : MutableLiveData<Vocabulary> = MutableLiveData<Vocabulary>()
     val vocabularyList: LiveData<List<Vocabulary>> = _allVocabulary
+    val preUpdatedVocabulary : LiveData<Vocabulary> = _preUpdatedVocabulary
 
     fun getVocabularyList() {
         viewModelScope.launch {
@@ -25,6 +28,11 @@ class VocabularyViewModel(private val repository: VocabularyRepository): ViewMod
                 Log.d("Get Vocabulary", e.message.toString())
             }
 
+        }
+    }
+    fun resetVocabularyList(){
+        viewModelScope.launch {
+            _allVocabulary = MutableLiveData<List<Vocabulary>>()
         }
     }
     fun addVocabulary(word: String, translation: String, description: String,example: String,pronounciation: String, difficulty: String){
@@ -56,8 +64,12 @@ class VocabularyViewModel(private val repository: VocabularyRepository): ViewMod
         }
     }
 
+    fun preUpdateVocabulary(vocabulary: Vocabulary) {
+        viewModelScope.launch {
+            _preUpdatedVocabulary.value = vocabulary
+        }
+    }
     fun updateVocabulary(vocabulary: Vocabulary) {
-
         viewModelScope.launch {
             repository.update(vocabulary)
         }

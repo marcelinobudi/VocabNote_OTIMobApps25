@@ -9,23 +9,35 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.asyadev.vocabnote.database.Vocabulary
+import com.asyadev.vocabnote.navigation.Destination
 import com.asyadev.vocabnote.ui.theme.VocabNoteTheme
+import com.asyadev.vocabnote.viewmodel.VocabularyViewModel
 
 @Composable
-fun EditVocabularyMenu(modifier: Modifier = Modifier) {
+fun EditVocabularyMenu(
+    viewModel: VocabularyViewModel,
+    navController: NavController,
+    modifier: Modifier = Modifier
+) {
+    val vocabularies = viewModel.preUpdatedVocabulary.observeAsState()
+    val vocabulary = vocabularies.value ?: Vocabulary.Companion.empty()
     // LOAD DARI DATABASE
-    val wordValue = remember{ mutableStateOf("") }
-    val translationValue = remember{ mutableStateOf("") }
-    val descriptionValue = remember{ mutableStateOf("") }
-    val usingExampleValue = remember{ mutableStateOf("") }
-    val pronounciationValue = remember{ mutableStateOf("") }
-    val difficultyValue = remember{ mutableStateOf("") }
+    val wordValue = remember{ mutableStateOf(vocabulary.word) }
+    val translationValue = remember{ mutableStateOf(vocabulary.translation) }
+    val descriptionValue = remember{ mutableStateOf(vocabulary.description) }
+    val usingExampleValue = remember{ mutableStateOf(vocabulary.example) }
+    val pronounciationValue = remember{ mutableStateOf(vocabulary.pronounciation) }
+    val difficultyValue = remember{ mutableStateOf(vocabulary.difficulty) }
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -105,18 +117,14 @@ fun EditVocabularyMenu(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(24.dp))
         Button(
             onClick = {
-                // UBAH Database
+                val editedVocabulary = Vocabulary(
+                    word = wordValue.value, translation = translationValue.value, description = descriptionValue.value, example = usingExampleValue.value, pronounciation = pronounciationValue.value, difficulty = difficultyValue.value, uid = vocabulary.uid
+                )
+                viewModel.updateVocabulary(editedVocabulary)
+                navController.navigate(route = Destination.VOCABULARY_LIST.route)
             }
         ) {
             Text("Edit")
         }
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun EditVocabularyMenuPreview() {
-    VocabNoteTheme {
-        EditVocabularyMenu()
     }
 }

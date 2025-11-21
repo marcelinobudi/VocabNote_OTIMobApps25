@@ -40,13 +40,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.asyadev.vocabnote.R
 import com.asyadev.vocabnote.database.Vocabulary
+import com.asyadev.vocabnote.navigation.Destination
 import com.asyadev.vocabnote.ui.theme.VocabNoteTheme
 import com.asyadev.vocabnote.viewmodel.VocabularyViewModel
 
 @Composable
-fun VocabularyMenu(viewModel: VocabularyViewModel, modifier: Modifier = Modifier) {
+fun VocabularyMenu(navController: NavController, viewModel: VocabularyViewModel, modifier: Modifier = Modifier) {
     val vocabulariesObserver = viewModel.vocabularyList.observeAsState()
     val vocabulary = vocabulariesObserver.value ?: listOf()
     Log.d("List vocabulary", vocabulary.toString())
@@ -94,7 +96,26 @@ fun VocabularyMenu(viewModel: VocabularyViewModel, modifier: Modifier = Modifier
                 ) {
                     OutlinedButton(
                         onClick = {
-                            // Belum dibuat
+                            try{
+                                viewModel.deleteVocabulary(vocabularyCard.value ?: Vocabulary.Companion.empty())
+                                navController.navigate(route = Destination.VOCABULARY_LIST.route)
+                            }catch (e: Exception) {
+                                Log.d("Navigasi", e.message.toString())
+                            }
+
+                        }
+                    ) {
+                        Text(text = "Hapus")
+                    }
+                    OutlinedButton(
+                        onClick = {
+                            try{
+                                viewModel.preUpdateVocabulary(vocabularyCard.value ?: Vocabulary.Companion.empty())
+                                navController.navigate(route = Destination.EDIT_VOCABULARY.route)
+                            }catch (e: Exception) {
+                                Log.d("Navigasi", e.message.toString())
+                            }
+
                         }
                     ) {
                         Text(text = "Edit")

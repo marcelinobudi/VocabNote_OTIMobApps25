@@ -3,7 +3,9 @@ package com.asyadev.vocabnote.database
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.versionedparcelable.VersionedParcelize
 
+@VersionedParcelize
 @Entity
 data class Vocabulary(
     @ColumnInfo(name="word") val word: String,
@@ -13,4 +15,8 @@ data class Vocabulary(
     @ColumnInfo(name = "pronounciation") val pronounciation: String,
     @ColumnInfo(name="difficulty") val difficulty: String,
     @PrimaryKey(autoGenerate = true) val uid: Int = 0,
-)
+){
+    object Companion{
+        fun empty() = Vocabulary("","","","","","")
+    }
+}

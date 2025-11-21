@@ -27,10 +27,10 @@ fun AppNavHost(
         Destination.entries.forEach { destination ->
             composable(destination.route) {
                 when (destination) {
-                    Destination.VOCABULARY_LIST -> VocabularyMenu(vocabularyViewModel, modifier)
+                    Destination.VOCABULARY_LIST -> VocabularyMenu(navController, vocabularyViewModel, modifier)
                     Destination.ADD_VOCABULARY -> AddVocabularyMenu(vocabularyViewModel, modifier)
                     Destination.QUIZ -> QuizMenu(vocabularyViewModel, modifier)
-                    Destination.EDIT_VOCABULARY -> EditVocabularyMenu(modifier)
+                    Destination.EDIT_VOCABULARY -> EditVocabularyMenu(vocabularyViewModel, navController)
                 }
             }
         }

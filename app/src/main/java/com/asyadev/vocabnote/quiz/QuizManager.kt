@@ -14,7 +14,7 @@ object QuizManager {
         val quizQuestion: MutableList<QuizQuestion> = mutableListOf()
         val copiedVocabularies: MutableList<Vocabulary> = vocabularies.toMutableList()
         if(vocabularies.size >= numberNeededForQuisRequirement){
-            for(i in 0 until maxNumber){
+            for(i in 0 until maxNumber+3){ // sengaja dibuat +3 untuk jaga-jaga indexOutOfBounds()
                 val randomIndex = Random.nextInt(copiedVocabularies.size)
                 val question = copiedVocabularies[randomIndex]
                 val quiz = QuizQuestion(
